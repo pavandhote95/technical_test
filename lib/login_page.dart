@@ -102,10 +102,10 @@ class _LoginPageState extends State<LoginPage> {
     return emailRegExp.hasMatch(email);
   }
 
-  // Function to validate password length
+
   bool _PasswordValid(String password) {
     return password.length >=
-        6; // Ensure password is at least 6 characters long
+        6; 
   }
 
   void _showToast(String message) {
