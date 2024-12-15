@@ -1,5 +1,6 @@
-import 'dart:convert';
+
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hackerkernal/add_product_page.dart';
@@ -314,12 +315,20 @@ Expanded(
                             product['image'] != null && product['image']!.isNotEmpty
                                 ? Padding(
                                     padding: const EdgeInsets.all(20.0),
-                                    child: Image.file(
-                                      File(product['image']!),
-                                      fit: BoxFit.fill,
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                    ),
+                                    child: kIsWeb
+          ? Image.network(
+              product['image'].toString(),  
+              fit: BoxFit.fill,
+              width: double.infinity, 
+              height: double.infinity, 
+            )
+          : Image.file(
+            File(product['image']!), 
+              fit: BoxFit.fill,
+              width: double.infinity, 
+              height: double.infinity, 
+            ),
+                                
                                   )
                                 : const Placeholder(),
                             Positioned(

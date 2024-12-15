@@ -21,9 +21,6 @@ class _AddProductPageState extends State<AddProductPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   String? _imagePath;
-
-
-  final ImagePicker _picker = ImagePicker();
   bool _isLoading = false;
   String? _nameError;   String? _priceError; 
  Future<void> _pickImage() async {
@@ -84,7 +81,6 @@ class _AddProductPageState extends State<AddProductPage> {
   );
 
 }
-
 
   void _submitProduct() async {
   if (_isLoading) return; 
@@ -290,10 +286,6 @@ TextFormField(
                         : Text("Add Product", style: TextStyle(fontSize: 16, color: Colors.white)),
                   ),
                 ),
-      
-     
-       
-
             
        
     ],
