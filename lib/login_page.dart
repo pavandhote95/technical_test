@@ -218,6 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 1,
                   color: Colors.grey,
                 ),
+                  const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -231,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 1),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
