@@ -25,7 +25,6 @@ class _LoginPageState extends State<LoginPage> {
    final email = _emailController.text;
     final password = _passwordController.text;
 
-    // Show validation errors via toast one by one.
 
     if (email.isEmpty || password.isEmpty) {
       Fluttertoast.showToast(
@@ -175,43 +174,44 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.grey,
                 ),
                 const SizedBox(height: 10),
-                TextFormField(
-                  controller: _passwordController,
-                  focusNode: _passwordFocusNode,
-                  obscureText: !_isPasswordVisible,
-                  decoration: InputDecoration(
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.only(right: 25.0),
-                      child: Icon(
-                        Icons.lock_outline_rounded,
-                        color: const Color.fromARGB(255, 125, 124, 124),
-                        size: 20,
-                      ),
-                    ),
-                    labelText: "Password",
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 125, 124, 124),
-                      fontSize: 14,
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        color: Colors.grey,
-                        _isPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
-                    ),
-                    contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    border: InputBorder.none,
-                  ),
-               
-                ),
+           TextFormField(
+  controller: _passwordController,
+  focusNode: _passwordFocusNode,
+  obscureText: !_isPasswordVisible,
+  decoration: InputDecoration(
+    prefixIcon: Padding(
+      padding: const EdgeInsets.only(right: 25.0),
+      child: Image.asset(
+        'assets/images/lock.png', 
+        width: 5,
+        height: 5,
+          color: const Color.fromARGB(255, 125, 124, 124), 
+      ),
+    ),
+    labelText: "Password",
+    labelStyle: TextStyle(
+      fontWeight: FontWeight.bold,
+      color: const Color.fromARGB(255, 125, 124, 124),
+      fontSize: 14,
+    ),
+    suffixIcon: IconButton(
+      icon: Icon(
+        color: Colors.grey,
+        _isPasswordVisible
+            ? Icons.visibility
+            : Icons.visibility_off,
+      ),
+      onPressed: () {
+        setState(() {
+          _isPasswordVisible = !_isPasswordVisible;
+        });
+      },
+    ),
+    contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+    border: InputBorder.none,
+  ),
+),
+
                 Container(
                   margin: const EdgeInsets.only(left: 40),
                   height: 1,
