@@ -122,6 +122,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -151,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Icon(
                         Icons.alternate_email,
                         color: const Color.fromARGB(255, 125, 124, 124),
-                        size: 20,
+                        size: 22,
                       ),
                     ),
                     labelText: "Email ID",
@@ -183,9 +184,9 @@ class _LoginPageState extends State<LoginPage> {
       padding: const EdgeInsets.only(right: 25.0),
       child: Image.asset(
         'assets/images/lock.png', 
-        width: 5,
-        height: 5,
-          color: const Color.fromARGB(255, 125, 124, 124), 
+        width: 21,
+        height: 21,
+          color: Colors.grey, 
       ),
     ),
     labelText: "Password",

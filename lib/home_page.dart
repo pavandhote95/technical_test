@@ -94,10 +94,10 @@ class _HomePageState extends State<HomePage> {
       (route) => false,
     );
     Fluttertoast.showToast(
-    msg: "Logged out successfully", 
+    msg: "Logout", 
     toastLength: Toast.LENGTH_SHORT, 
     gravity: ToastGravity.BOTTOM, 
-    backgroundColor: Colors.green, 
+    backgroundColor: Colors.blue, 
     textColor: Colors.white, 
     fontSize: 16.0, 
   );
