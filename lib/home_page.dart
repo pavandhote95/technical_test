@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hackerkernal/add_product_page.dart';
 import 'package:hackerkernal/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,17 +77,44 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  Future<void> _logout(context) async {
+  
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  Future<void> _logout(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', false);
+  
+  await prefs.setBool('isLoggedIn', false);
 
-    Navigator.pushAndRemoveUntil(
+  
+
+  
+ Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
       (route) => false,
     );
-  }
+    Fluttertoast.showToast(
+    msg: "Logged out successfully", 
+    toastLength: Toast.LENGTH_SHORT, 
+    gravity: ToastGravity.BOTTOM, 
+    backgroundColor: Colors.green, 
+    textColor: Colors.white, 
+    fontSize: 16.0, 
+  );
+
+}
+
+
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
 
   Future<void> _deleteProduct(int index) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -140,17 +168,33 @@ class _HomePageState extends State<HomePage> {
       ),
     ),
         _isSearching
-        ? Container(
+        ?  Container(
             height: 40,
             width: MediaQuery.of(context).size.width * 0.6,
             child: TextField(
               controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search products',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+               decoration: InputDecoration(
+                                  hintText: 'Search Products' ,
+                                  hintStyle: TextStyle(color: const Color.fromARGB(130, 0, 0, 0)),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.grey.shade200,
+                                        width:
+                                            2.0), 
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8.0)),
+                                  ),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.grey,
+                                        width:
+                                            1.0), 
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8.0)),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 10),
+                                ),
               onChanged: (value) {
                 setState(() {});
               },
