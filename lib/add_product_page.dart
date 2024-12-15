@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hackerkernal/login_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:html' as html;
 
 class AddProductPage extends StatefulWidget {
   final Function(Map<String, String>) onAddProduct;
@@ -24,14 +26,39 @@ class _AddProductPageState extends State<AddProductPage> {
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = false;
   String? _nameError;   String? _priceError; 
-    Future<void> _pickImage() async {
+ Future<void> _pickImage() async {
+  
+  if (kIsWeb) {
+    
+    html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+    uploadInput.accept = 'image/*';
+    uploadInput.click();
+
+    uploadInput.onChange.listen((e) async {
+      final files = uploadInput.files;
+      if (files!.isEmpty) return;
+
+      final reader = html.FileReader();
+      reader.readAsDataUrl(files[0] as html.File);
+
+      reader.onLoadEnd.listen((e) {
+        setState(() {
+          _imagePath = reader.result as String; 
+        });
+      });
+    });
+  } else {
+    
+    final ImagePicker _picker = ImagePicker();
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _imagePath = pickedFile.path;
+        _imagePath = pickedFile.path; 
       });
     }
   }
+}
+ 
   Future<void> _logout(context) async {
   
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -221,8 +248,17 @@ TextFormField(
                                     if (_imagePath != null)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Image.file(File(_imagePath!), height: 100),
-                    ),
+                      child: kIsWeb
+          ? Image.network(
+              _imagePath!,  
+              height: 100,   
+              fit: BoxFit.cover,  
+            )
+          : Image.file(
+              File(_imagePath!),  
+              height: 100,  
+              fit: BoxFit.cover,  
+            ),),
                   _customButton(
                     text: 'Pick Image',
                     icon: Icons.image,
