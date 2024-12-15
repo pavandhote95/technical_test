@@ -6,15 +6,11 @@ import 'package:hackerkernal/login_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class AddProductPage extends StatefulWidget {
   final Function(Map<String, String>) onAddProduct;
-  final Function(Map<String, String>) onAddAccessory;
 
-  const AddProductPage({
-    required this.onAddProduct,
-    required this.onAddAccessory,
-    Key? key,
-  }) : super(key: key);
+  const AddProductPage({required this.onAddProduct, Key? key}) : super(key: key);
 
   @override
   _AddProductPageState createState() => _AddProductPageState();
@@ -26,12 +22,7 @@ class _AddProductPageState extends State<AddProductPage> {
   final TextEditingController _priceController = TextEditingController();
   String? _imagePath;
   bool _isLoading = false;
-  String? _nameError;
-  String? _priceError;
-  String? _category; // Variable to store selected category
-
-  // Categories list
-  final List<String> _categories = ['Product', 'Accessories'];
+  String? _nameError, _priceError;
 
   Future<void> _pickImage() async {
     // if (kIsWeb) {
@@ -44,7 +35,7 @@ class _AddProductPageState extends State<AddProductPage> {
     //     if (files!.isEmpty) return;
 
     //     final reader = html.FileReader();
-    //     reader.readAsDataUrl(files[0] as html.File);
+      
 
     //     reader.onLoadEnd.listen((e) {
     //       setState(() {
@@ -63,7 +54,7 @@ class _AddProductPageState extends State<AddProductPage> {
     
   }
 
-  Future<void> _logout(context) async {
+  Future<void> _logout(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', false);
 
@@ -82,11 +73,12 @@ class _AddProductPageState extends State<AddProductPage> {
     );
   }
 
-  void _submit() async {
+  void _submitProduct() async {
     if (_isLoading) return;
+
     if (_nameController.text.trim().isEmpty) {
       setState(() {
-        _nameError = 'Name is required';
+        _nameError = 'Product name is required';
       });
       return;
     } else {
@@ -119,35 +111,18 @@ class _AddProductPageState extends State<AddProductPage> {
       });
     }
 
-    if (_category == null) {
-      Fluttertoast.showToast(
-        msg: "Please select a category",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-      return;
-    }
-
     setState(() {
       _isLoading = true;
     });
 
-    await Future.delayed(const Duration(seconds: 2));
-    final data = {
+    await Future.delayed(const Duration(seconds: 2)); // Simulating loading
+    final product = {
       'name': _nameController.text.trim(),
       'price': price,
       'image': _imagePath ?? '',
-      'category': _category ?? '',
     };
 
-    if (_category == 'Product') {
-      widget.onAddProduct(data);  // Trigger onAddProduct callback for products
-    } else if (_category == 'Accessories') {
-      widget.onAddAccessory(data);  // Trigger onAddAccessory callback for accessories
-    }
+    widget.onAddProduct(product);
 
     setState(() {
       _isLoading = false;
@@ -173,7 +148,6 @@ class _AddProductPageState extends State<AddProductPage> {
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blue,
-        disabledBackgroundColor: Colors.blue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -187,7 +161,7 @@ class _AddProductPageState extends State<AddProductPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Add Product / Accessory',
+          'Add Product',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -224,14 +198,14 @@ class _AddProductPageState extends State<AddProductPage> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: Color.fromARGB(231, 243, 242, 242),
+                  color: const Color.fromARGB(231, 243, 242, 242),
                   border: Border.all(
-                    color: Color.fromARGB(18, 123, 123, 123),
+                    color: const Color.fromARGB(18, 123, 123, 123),
                     width: 1.0,
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Icon(
                     Icons.logout,
                     color: Color.fromARGB(149, 0, 0, 0),
@@ -255,7 +229,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
-                      labelText: 'Name',
+                      labelText: 'Product Name',
                       errorText: _nameError,
                     ),
                   ),
@@ -268,34 +242,6 @@ class _AddProductPageState extends State<AddProductPage> {
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 20),
-
-                  // Dropdown for category selection
-                  DropdownButtonFormField<String>(
-                    value: _category,
-                    onChanged: (value) {
-                      setState(() {
-                        _category = value;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Select Category',
-                    ),
-                    items: _categories
-                        .map((category) => DropdownMenuItem<String>(
-                              value: category,
-                              child: Text(category),
-                            ))
-                        .toList(),
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please select a category';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 20),
-
                   if (_imagePath != null)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -316,36 +262,32 @@ class _AddProductPageState extends State<AddProductPage> {
                     icon: Icons.image,
                     onPressed: _pickImage,
                   ),
-
                   const SizedBox(height: 20),
-
                   Center(
-                    child: Stack(
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _submit,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              disabledBackgroundColor: Colors.blue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: _isLoading
-                                ? SizedBox(
-                                    height: 22,
-                                    width: 22,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 3.0,
-                                    ),
-                                  )
-                                : Text("Add Item", style: TextStyle(fontSize: 16, color: Colors.white)),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _submitProduct,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                      ],
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 22,
+                                width: 22,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 3.0,
+                                ),
+                              )
+                            : const Text(
+                                "Add Product",
+                                style: TextStyle(fontSize: 16, color: Colors.white),
+                              ),
+                      ),
                     ),
                   ),
                 ],
