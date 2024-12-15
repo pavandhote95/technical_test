@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hackerkernal/add_product_page.dart';
 import 'package:hackerkernal/login_page.dart';
@@ -25,12 +24,15 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _products = (prefs.getStringList('products') ?? []).map((item) {
+
         final parts = item.split('|');
         return {
           'name': parts[0],
           'image': parts[1],
           'price': parts[2],
+
         };
+
       }).toList();
     });
   }

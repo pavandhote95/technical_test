@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hackerkernal/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -18,12 +19,43 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _isPasswordVisible = false;
 
-Future<void> _login() async {
-  if (!_formKey.currentState!.validate()) return;  if (_emailValidation(_emailController.text) == null) {
-    _passwordFocusNode.requestFocus(); 
-  }
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
 
-  if (_passwordValidation(_passwordController.text) == null) {
+   final email = _emailController.text;
+    final password = _passwordController.text;
+
+    // Show validation errors via toast one by one.
+
+    if (email.isEmpty || password.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Email and Password cannot be empty!",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return;
+    }
+
+    if (!_EmailValid(email)) {
+      Fluttertoast.showToast(
+        msg: "Please enter a valid email!",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return;
+    }
+
+    if (!_PasswordValid(password)) {
+      Fluttertoast.showToast(
+        msg: "Password should be at least 6 characters!",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return;
+    }
     setState(() => _isLoading = true);
 
     final url = Uri.parse('https://reqres.in/api/login');
@@ -57,35 +89,36 @@ Future<void> _login() async {
         );
       } else {
         final errorMessage = jsonDecode(response.body)['error'] ?? 'Login failed!';
-        _showSnackBar(errorMessage);
+        _showToast(errorMessage);
       }
     } catch (e) {
-      _showSnackBar('Something went wrong. Please try again.');
+      _showToast('Something went wrong. Please try again.');
     } finally {
       setState(() => _isLoading = false);
     }
   }
-}
-
-String? _emailValidation(value) {
-  if (value == null || value.isEmpty) {
-    _emailFocusNode.requestFocus();
-    return 'Email is required';
-  } return null;
-}
-
-String? _passwordValidation(value) {
-  if (value == null || value.isEmpty) {
-    _passwordFocusNode.requestFocus();
-    return 'Password is required';
-  }
-  return null;
-}
-
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  bool _EmailValid(String email) {
+    final emailRegExp =
+        RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+    return emailRegExp.hasMatch(email);
   }
 
+  // Function to validate password length
+  bool _PasswordValid(String password) {
+    return password.length >=
+        6; // Ensure password is at least 6 characters long
+  }
+
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +145,7 @@ String? _passwordValidation(value) {
                 TextFormField(
                   controller: _emailController,
                   focusNode: _emailFocusNode,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     prefixIcon: Padding(
                       padding: const EdgeInsets.only(right: 25.0),
@@ -130,7 +164,7 @@ String? _passwordValidation(value) {
                     contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                     border: InputBorder.none,
                   ),
-                  validator:_emailValidation,
+              
                   onFieldSubmitted: (_) {
                     _passwordFocusNode.requestFocus();
                   },
@@ -176,15 +210,13 @@ String? _passwordValidation(value) {
                     contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                     border: InputBorder.none,
                   ),
-                  validator:_passwordValidation,
+               
                 ),
                 Container(
                   margin: const EdgeInsets.only(left: 40),
                   height: 1,
                   color: Colors.grey,
                 ),
-              
-              
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
