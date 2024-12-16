@@ -54,24 +54,32 @@ class _AddProductPageState extends State<AddProductPage> {
     
   }
 
-  Future<void> _logout(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', false);
+  Future<void> _logout(context) async {
+  
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    Navigator.pushAndRemoveUntil(
+  
+  await prefs.setBool('isLoggedIn', false);
+
+  
+
+  
+ Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
       (route) => false,
     );
     Fluttertoast.showToast(
-      msg: "Logged out successfully",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-  }
+    msg: "Logout", 
+    toastLength: Toast.LENGTH_SHORT, 
+    gravity: ToastGravity.BOTTOM, 
+    backgroundColor: Colors.blue, 
+    textColor: Colors.white, 
+    fontSize: 16.0, 
+  );
+
+}
+
 
   void _submitProduct() async {
     if (_isLoading) return;

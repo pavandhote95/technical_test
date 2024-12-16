@@ -19,6 +19,16 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _isPasswordVisible = false;
 
+  @override
+void dispose() {
+  _emailController.dispose();
+  _passwordController.dispose();
+  _emailFocusNode.dispose();
+  _passwordFocusNode.dispose();
+  super.dispose();
+}
+
+
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -133,13 +143,13 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Image.asset(
                   'assets/images/login.png',
-                  height: 300,
+                  height: 290,
                   width: double.infinity,
                 ),
-                const SizedBox(height: 3),
+          
                 const Text(
                   "Login",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
@@ -151,14 +161,14 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.only(right: 25.0),
                       child: Icon(
                         Icons.alternate_email,
-                        color: const Color.fromARGB(255, 125, 124, 124),
+                        color: Colors.grey,
                         size: 22,
                       ),
                     ),
                     labelText: "Email ID",
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 125, 124, 124),
+                      color: Colors.grey,
                       fontSize: 14,
                     ),
                     contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -192,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
     labelText: "Password",
     labelStyle: TextStyle(
       fontWeight: FontWeight.bold,
-      color: const Color.fromARGB(255, 125, 124, 124),
+      color:    Colors.grey,
       fontSize: 14,
     ),
     suffixIcon: IconButton(
@@ -228,13 +238,14 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
-                          fontSize: 14),
+                         fontSize: 14,),
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
+                  height: 44,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _login,
                     style: ElevatedButton.styleFrom(
@@ -256,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                         : Text(
                             "Login",
                             style: TextStyle(
-                                fontSize: 14,
+                           fontSize: 14,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -274,29 +285,46 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () {},
-                    icon: Padding(
-                      padding: const EdgeInsets.only(right: 18.0),
-                      child: Image.asset('assets/images/Google.png'),
-                    ),
-                    label: const Text(
-                      "Login with Google",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.grey),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
+              Container(
+  decoration: BoxDecoration(
+    color:Color(0xFFF1F6F7),
+    borderRadius: BorderRadius.circular(15),
+  ),
+  width: double.infinity,
+        height: 44,
+  child: InkWell(
+    onTap: () {
+      // Add your Google login logic here
+    },
+    borderRadius: BorderRadius.circular(15), // Add touch ripple effect within rounded edges
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 18.0),
+            child: Image.asset(
+              'assets/images/Google.png',
+              height: 20, // Adjust image size if needed
+              width: 20,
+            ),
+          ),
+          const Text(
+            "Login with Google",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    ),
+  ),
+),
+
+              
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -304,6 +332,7 @@ class _LoginPageState extends State<LoginPage> {
                     const Text(
                       "New to Logistics? ",
                       style: TextStyle(
+                               fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 125, 124, 124)),
                     ),
@@ -312,6 +341,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Text(
                         "Register",
                         style: TextStyle(
+                             fontSize: 14,
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
                         ),
