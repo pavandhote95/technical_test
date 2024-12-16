@@ -177,7 +177,7 @@ Fluttertoast.showToast(
       );
     });
       Fluttertoast.showToast(
-    msg: "Product deleted successful!",
+    msg: "Accessory deleted successful!",
     toastLength: Toast.LENGTH_SHORT,
     gravity: ToastGravity.BOTTOM,
     backgroundColor: const Color.fromARGB(231, 243, 242, 242),
