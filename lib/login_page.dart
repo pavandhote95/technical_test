@@ -84,12 +84,12 @@ void dispose() {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Login successful!'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
+        Fluttertoast.showToast(
+        msg: "Login successful!",
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        gravity: ToastGravity.BOTTOM,
+      
         );
 
         Navigator.pushReplacement(
@@ -106,6 +106,7 @@ void dispose() {
       setState(() => _isLoading = false);
     }
   }
+ 
   bool _EmailValid(String email) {
     final emailRegExp =
         RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
