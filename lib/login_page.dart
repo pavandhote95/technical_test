@@ -293,34 +293,28 @@ void dispose() {
   ),
   width: double.infinity,
         height: 44,
-  child: InkWell(
-    onTap: () {
-      // Add your Google login logic here
-    },
-    borderRadius: BorderRadius.circular(15), // Add touch ripple effect within rounded edges
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 18.0),
-            child: Image.asset(
-              'assets/images/Google.png',
-              height: 20, // Adjust image size if needed
-              width: 20,
-            ),
+  child: Padding(
+    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right: 18.0),
+          child: Image.asset(
+            'assets/images/Google.png',
+            height: 20, 
+            width: 20,
           ),
-          const Text(
-            "Login with Google",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            ),
+        ),
+        const Text(
+          "Login with Google",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
           ),
-        ],
-      ),
+        ),
+      ],
     ),
   ),
 ),
