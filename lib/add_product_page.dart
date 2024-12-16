@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProductPage extends StatefulWidget {
@@ -36,65 +38,86 @@ class _AddProductPageState extends State<AddProductPage> {
     }
   }
 
-  void _submitProduct() async {
-    if (_isLoading) return;
+void _submitProduct() async {
+  if (_isLoading) return;
 
-    
-    if (_nameController.text.trim().isEmpty) {
-      setState(() => _nameError = 'Product name is required');
-      return;
-    } else {
-      setState(() => _nameError = null);
-    }
-
-    final price = _priceController.text.trim();
-    if (price.isEmpty) {
-      setState(() => _priceError = 'Price is required');
-      return;
-    } else {
-      setState(() => _priceError = null);
-    }
-
-    final priceValue = double.tryParse(price);
-    if (priceValue == null) {
-      setState(() => _priceError = 'Enter a valid price');
-      return;
-    } else {
-      setState(() => _priceError = null);
-    }
-
-    if (_selectedCategory == null) {
-      setState(() => _categoryError = 'Please select a category');
-      return;
-    } else {
-      setState(() => _categoryError = null);
-    }
-
-    setState(() => _isLoading = true);
-
-    
-    await Future.delayed(const Duration(seconds: 2));
-
-    
-    final productData = {
-      'name': _nameController.text.trim(),
-      'price': price,
-      'image': _imagePath ?? '',
-      'category': _selectedCategory!,
-    };
-
-    
-    if (_selectedCategory == 'Product') {
-      widget.onAddProduct(productData);
-    } else if (_selectedCategory == 'Accessories') {
-      widget.onAddAccessory(productData);
-    }
-
-    setState(() => _isLoading = false);
-
-    
-    Navigator.pop(context);
+  
+  if (_nameController.text.trim().isEmpty) {
+    Fluttertoast.showToast(
+      msg: "Product name is required",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+    return;
   }
+
+  final price = _priceController.text.trim();
+  
+  if (price.isEmpty) {
+    Fluttertoast.showToast(
+      msg: "Price is required",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+    return;
+  }
+
+  final priceValue = double.tryParse(price);
+  if (priceValue == null) {
+    Fluttertoast.showToast(
+      msg: "Enter a valid price",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+    return;
+  }
+
+  
+  if (_selectedCategory == null) {
+    Fluttertoast.showToast(
+      msg: "Please select a category",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+    return;
+  }
+
+  
+  setState(() => _isLoading = true);
+
+  
+  await Future.delayed(const Duration(seconds: 2));
+
+  
+  final productData = {
+    'name': _nameController.text.trim(),
+    'price': price,
+    'image': _imagePath ?? '',
+    'category': _selectedCategory!,
+  };
+
+  
+  if (_selectedCategory == 'Product') {
+    widget.onAddProduct(productData);
+  } else if (_selectedCategory == 'Accessories') {
+    widget.onAddAccessory(productData);
+  }
+
+  
+
+
+  
+  setState(() => _isLoading = false);
+  Navigator.pop(context);
+}
 
   Widget _customButton({
     required String text,
@@ -112,6 +135,8 @@ class _AddProductPageState extends State<AddProductPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
+        elevation: 5,
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
       ),
       onPressed: onPressed,
     );
@@ -121,6 +146,7 @@ class _AddProductPageState extends State<AddProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text(
           'Add Product',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -149,101 +175,158 @@ class _AddProductPageState extends State<AddProductPage> {
             ),
           ),
         ),
-     
       ),
-      body: Padding(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [const Color.fromARGB(255, 245, 248, 250), Colors.white],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Product Name',
-                    errorText: _nameError,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: _priceController,
-                  decoration: InputDecoration(
-                    labelText: 'Price',
-                    errorText: _priceError,
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 20),
-                if (_imagePath != null)
+        
+        child: FadeInDown(
+            duration: Duration(milliseconds: 1100),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 50),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: kIsWeb
-                        ? Image.network(
-                            _imagePath!,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.file(
-                            File(_imagePath!),
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                _customButton(
-                  text: 'Pick Image',
-                  icon: Icons.image,
-                  onPressed: _pickImage,
-                ),
-                const SizedBox(height: 20),
-                DropdownButtonFormField<String>(
-                  value: _selectedCategory,
-                  items: ['Product', 'Accessories']
-                      .map((category) => DropdownMenuItem(
-                            value: category,
-                            child: Text(category),
-                          ))
-                      .toList(),
-                  decoration: InputDecoration(
-                    labelText: 'Select Category',
-                    errorText: _categoryError,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _submitProduct,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: 'Product Name',
+                        errorText: _nameError,
+                        border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              height: 22,
-                              width: 22,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 3.0,
-                              ),
-                            )
-                          : const Text(
-                              "Add Product",
-                              style: TextStyle(fontSize: 16, color: Colors.white),
-                            ),
                     ),
                   ),
-                ),
-              ],
+              
+                  Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                    child: TextFormField(
+                      controller: _priceController,
+                      decoration: InputDecoration(
+                        labelText: 'Price',
+                        errorText: _priceError,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  
+                  if (_imagePath != null)
+                    Center(
+                      child: kIsWeb
+                          ? Image.network(
+                              _imagePath!,
+                              height: 100,
+                              fit: BoxFit.fill,
+                            )
+                          : Image.file(
+                              File(_imagePath!),
+                              height: 100,
+                              fit: BoxFit.fill,
+                            ),
+                    )
+                  else
+                    Center(
+                      child: Container(
+                        height: 150,
+                        width:kIsWeb? double.infinity:200,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                            width: 1.5,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.image,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  Center(
+                    child: _customButton(
+                      text: 'Pick Image',
+                      icon: Icons.image,
+                      onPressed: _pickImage,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: DropdownButtonFormField<String>(
+                      value: _selectedCategory,
+                      items: ['Product', 'Accessories']
+                          .map((category) => DropdownMenuItem(
+                                value: category,
+                                child: Text(category),
+                              ))
+                          .toList(),
+                      decoration: InputDecoration(
+                        labelText: 'Select Category',
+                        errorText: _categoryError,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCategory = value;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Center(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _submitProduct,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 5,
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 22,
+                                width: 22,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 3.0,
+                                ),
+                              )
+                            : const Text(
+                                "Add Product",
+                                style:
+                                    TextStyle(fontSize: 16, color: Colors.white),
+                              ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

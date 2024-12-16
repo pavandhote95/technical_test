@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
 bool _showAllAccessories = false; 
 
 
+
   @override
   void initState() {
     super.initState();
@@ -63,16 +64,18 @@ bool _showAllAccessories = false;
         product['name']!.toLowerCase());
 
     if (isDuplicate) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Product already exists!',
-            style: TextStyle(color: Colors.black),
-          ),
-          duration: Duration(seconds: 2),
-          backgroundColor: Color.fromARGB(231, 243, 242, 242),
-        ),
-      );
+      
+Fluttertoast.showToast(
+  msg: "Product already exists!",
+  toastLength: Toast.LENGTH_SHORT,
+  gravity: ToastGravity.BOTTOM,
+  backgroundColor: const Color.fromARGB(231, 243, 242, 242),
+  textColor: Colors.black,
+  fontSize: 16.0,
+);
+
+
+    
       return;
     }
 
@@ -86,16 +89,15 @@ bool _showAllAccessories = false;
       );
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Product added successfully!',
-          style: TextStyle(color: Colors.black),
-        ),
-        duration: Duration(seconds: 2),
-        backgroundColor: Color.fromARGB(231, 243, 242, 242),
-      ),
-    );
+Fluttertoast.showToast(
+  msg: "Product added successfully!",
+  toastLength: Toast.LENGTH_SHORT,
+  gravity: ToastGravity.BOTTOM,
+  backgroundColor: const Color.fromARGB(231, 243, 242, 242),
+  textColor: Colors.black,
+  fontSize: 16.0,
+);
+
   }
 
   Future<void> _addAccessory(Map<String, String> accessory) async {
@@ -107,16 +109,17 @@ bool _showAllAccessories = false;
         accessory['name']!.toLowerCase());
 
     if (isDuplicate) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Accessory already exists!',
-            style: TextStyle(color: Colors.black),
-          ),
-          duration: Duration(seconds: 2),
-          backgroundColor: Color.fromARGB(231, 243, 242, 242),
-        ),
-      );
+      Fluttertoast.showToast(
+  msg: "Accessory already exists!",
+  toastLength: Toast.LENGTH_SHORT,
+  gravity: ToastGravity.BOTTOM,
+  backgroundColor: const Color.fromARGB(231, 243, 242, 242),
+  textColor: Colors.black,
+  fontSize: 16.0,
+);
+
+      
+ 
       return;
     }
 
@@ -129,17 +132,17 @@ bool _showAllAccessories = false;
             .toList(),
       );
     });
+Fluttertoast.showToast(
+  msg: "Accessory added successfully!",
+  toastLength: Toast.LENGTH_SHORT,
+  gravity: ToastGravity.BOTTOM,
+  backgroundColor: const Color.fromARGB(231, 243, 242, 242),
+  textColor: Colors.black,
+  fontSize: 16.0,
+);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Accessory added successfully!',
-          style: TextStyle(color: Colors.black),
-        ),
-        duration: Duration(seconds: 2),
-        backgroundColor: Color.fromARGB(231, 243, 242, 242),
-      ),
-    );
+
+  
   }
 
   Future<void> _logout(context) async {
@@ -189,7 +192,9 @@ bool _showAllAccessories = false;
 
   @override
   Widget build(BuildContext context) {
+      bool _keyboardActive = MediaQuery.of(context).viewInsets.bottom > 0;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -260,9 +265,9 @@ bool _showAllAccessories = false;
                   icon: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Color.fromARGB(231, 243, 242, 242),
+                      color:Colors.white,
                       border: Border.all(
-                        color: Color.fromARGB(18, 123, 123, 123),
+                        color: Color.fromARGB(48, 123, 123, 123),
                         width: 1.0,
                       ),
                     ),
@@ -278,31 +283,33 @@ bool _showAllAccessories = false;
                   onPressed: () {
                     setState(() {
                       _isSearching = !_isSearching;
-                      if (!_isSearching) {
+                      if (_isSearching) {
                         _searchController.clear();
                       }
                     });
                   },
                 ),
+             
+             
               ],
             ),
             SizedBox(
               height: 30,
             ),
-            const Text(
+            !_isSearching ?   const Text(
               "Hi-Fi Shop & Service",
               style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
+            ):SizedBox.shrink(),
+           !_isSearching ?  SizedBox(
               height: 15,
-            ),
-            const Text(
+            ):SizedBox.shrink(),
+             !_isSearching?  const Text(
               'Audio shop on Rustaveli Ave 57.\nThis shop offers both products and services',
               style: TextStyle(color: Colors.grey),
-            ),
-            SizedBox(
+            ):SizedBox.shrink(),
+          !_isSearching?  SizedBox(
               height: 30,
-            ),
+            ):SizedBox.shrink(),
           
 
 
@@ -345,7 +352,7 @@ Expanded(
             double screenWidth = constraints.maxWidth;
 
             int crossAxisCount = 2;
-            double childAspectRatio = 0.9;
+            double childAspectRatio = _keyboardActive?1.3:0.9;
             if (screenWidth > 600 && screenWidth <= 1024) {
               crossAxisCount = 3;
               childAspectRatio = 1.2;
@@ -392,7 +399,7 @@ Expanded(
                           children: [
                             product['image'] != null && product['image']!.isNotEmpty
                                 ? Padding(
-                                    padding: const EdgeInsets.all(20.0),
+                                    padding:_keyboardActive? const EdgeInsets.all(10.0):const EdgeInsets.all(20.0),
                                     child: kIsWeb
                                         ? Image.network(product['image'].toString(), fit: BoxFit.fill, width: double.infinity, height: double.infinity)
                                         : Image.file(File(product['image']!), fit: BoxFit.fill, width: double.infinity, height: double.infinity),
@@ -401,8 +408,9 @@ Expanded(
                             Positioned(
                               top: 0.0,
                               right: 0.0,
+                                                             bottom:  _keyboardActive?10:75,
                               child: IconButton(
-                                icon: Image.asset('assets/images/delete.png', width: 25, height: 25),
+                                icon: Image.asset('assets/images/delete.png', width:_keyboardActive?15: 25, height: _keyboardActive?15: 25,),
                                 onPressed: () => _deleteProduct(index),
                                 tooltip: 'Delete product',
                               ),
@@ -435,7 +443,7 @@ Expanded(
           },
         ),
 ),
-
+ 
 
 Row(
   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -474,7 +482,7 @@ Expanded(
             double screenWidth = constraints.maxWidth;
 
             int crossAxisCount = 2;
-            double childAspectRatio = 0.9;
+            double childAspectRatio = _keyboardActive?1.3:0.9;
             if (screenWidth > 600 && screenWidth <= 1024) {
               crossAxisCount = 3;
               childAspectRatio = 1.2;
@@ -490,7 +498,7 @@ Expanded(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                mainAxisSpacing:  10,
                 childAspectRatio: childAspectRatio,
               ),
               itemCount: itemsToShow.length,
@@ -519,17 +527,19 @@ Expanded(
                           children: [
                             accessory['image'] != null && accessory['image']!.isNotEmpty
                                 ? Padding(
-                                    padding: const EdgeInsets.all(20.0),
+                                    padding:_keyboardActive? const EdgeInsets.all(10.0):const EdgeInsets.all(20.0),
                                     child: kIsWeb
                                         ? Image.network(accessory['image'].toString(), fit: BoxFit.fill, width: double.infinity, height: double.infinity)
                                         : Image.file(File(accessory['image']!), fit: BoxFit.fill, width: double.infinity, height: double.infinity),
                                   )
                                 : const Placeholder(),
                             Positioned(
-                              top: 0.0,
+                              top: 0,
                               right: 0.0,
+                              bottom:  _keyboardActive?10:75,
+                              
                               child: IconButton(
-                                icon: Image.asset('assets/images/delete.png', width: 25, height: 25),
+                                icon: Image.asset('assets/images/delete.png',width:_keyboardActive?15: 25, height: _keyboardActive?15: 25,),
                                 onPressed: () => _deleteAccessory(index),
                                 tooltip: 'Delete accessory',
                               ),
