@@ -38,86 +38,76 @@ class _AddProductPageState extends State<AddProductPage> {
     }
   }
 
-void _submitProduct() async {
-  if (_isLoading) return;
+  void _submitProduct() async {
+    if (_isLoading) return;
 
-  
-  if (_nameController.text.trim().isEmpty) {
-    Fluttertoast.showToast(
-      msg: "Product name is required",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-    );
-    return;
+    if (_nameController.text.trim().isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Product name is required",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    final price = _priceController.text.trim();
+
+    if (price.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Price is required",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    final priceValue = double.tryParse(price);
+    if (priceValue == null) {
+      Fluttertoast.showToast(
+        msg: "Enter a valid price",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    if (_selectedCategory == null) {
+      Fluttertoast.showToast(
+        msg: "Please select a category",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    final productData = {
+      'name': _nameController.text.trim(),
+      'price': price,
+      'image': _imagePath ?? '',
+      'category': _selectedCategory!,
+    };
+
+    if (_selectedCategory == 'Product') {
+      widget.onAddProduct(productData);
+    } else if (_selectedCategory == 'Accessories') {
+      widget.onAddAccessory(productData);
+    }
+
+    setState(() => _isLoading = false);
+    Navigator.pop(context);
   }
-
-  final price = _priceController.text.trim();
-  
-  if (price.isEmpty) {
-    Fluttertoast.showToast(
-      msg: "Price is required",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-    );
-    return;
-  }
-
-  final priceValue = double.tryParse(price);
-  if (priceValue == null) {
-    Fluttertoast.showToast(
-      msg: "Enter a valid price",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-    );
-    return;
-  }
-
-  
-  if (_selectedCategory == null) {
-    Fluttertoast.showToast(
-      msg: "Please select a category",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-    );
-    return;
-  }
-
-  
-  setState(() => _isLoading = true);
-
-  
-  await Future.delayed(const Duration(seconds: 2));
-
-  
-  final productData = {
-    'name': _nameController.text.trim(),
-    'price': price,
-    'image': _imagePath ?? '',
-    'category': _selectedCategory!,
-  };
-
-  
-  if (_selectedCategory == 'Product') {
-    widget.onAddProduct(productData);
-  } else if (_selectedCategory == 'Accessories') {
-    widget.onAddAccessory(productData);
-  }
-
-  
-
-
-  
-  setState(() => _isLoading = false);
-  Navigator.pop(context);
-}
 
   Widget _customButton({
     required String text,
@@ -184,21 +174,18 @@ void _submitProduct() async {
             end: Alignment.bottomRight,
           ),
         ),
-        
         padding: const EdgeInsets.all(16.0),
-        
         child: FadeInDown(
-            duration: Duration(milliseconds: 1100),
+          duration: Duration(milliseconds: 1100),
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
               child: Column(
-                
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 50),
                   Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: TextFormField(
                       controller: _nameController,
                       decoration: InputDecoration(
@@ -210,9 +197,9 @@ void _submitProduct() async {
                       ),
                     ),
                   ),
-              
                   Padding(
-                     padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
                     child: TextFormField(
                       controller: _priceController,
                       decoration: InputDecoration(
@@ -226,7 +213,6 @@ void _submitProduct() async {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  
                   if (_imagePath != null)
                     Center(
                       child: kIsWeb
@@ -242,26 +228,31 @@ void _submitProduct() async {
                             ),
                     )
                   else
-                    Center(
-                      child: Container(
-                        height: 150,
-                        width:kIsWeb? double.infinity:200,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                            width: 1.5,
+                    InkWell(
+                      onTap: () {
+                        _pickImage();
+                      },
+                      child: Center(
+                        child: Container(
+                          height: 150,
+                          width: kIsWeb ? double.infinity : 200,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.5,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.image,
-                            color: Colors.grey,
+                          child: const Center(
+                            child: Icon(
+                              Icons.image,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Center(
                     child: _customButton(
                       text: 'Pick Image',
@@ -319,8 +310,8 @@ void _submitProduct() async {
                               )
                             : const Text(
                                 "Add Product",
-                                style:
-                                    TextStyle(fontSize: 16, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
                               ),
                       ),
                     ),

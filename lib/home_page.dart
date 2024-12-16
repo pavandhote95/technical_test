@@ -176,18 +176,39 @@ Fluttertoast.showToast(
             .toList(), 
       );
     });
+      Fluttertoast.showToast(
+    msg: "Product deleted successful!",
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: const Color.fromARGB(231, 243, 242, 242),
+    textColor: Colors.black,
+    fontSize: 16.0,
+  );
   }
 
-  Future<void> _deleteProduct(int index) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _products.removeAt(index);
-      prefs.setStringList(
-          'products',
-          _products
-              .map((p) => '${p['name']}|${p['image']}|${p['price']}')
-              .toList());
-    });
+
+    Future<void> _deleteProduct(int index) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  setState(() {
+    _products.removeAt(index);
+    prefs.setStringList(
+        'products',
+        _products
+            .map((p) => '${p['name']}|${p['image']}|${p['price']}')
+            .toList());
+  });
+
+  // Show a toast message
+  Fluttertoast.showToast(
+    msg: "Product deleted successful!",
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: const Color.fromARGB(231, 243, 242, 242),
+    textColor: Colors.black,
+    fontSize: 16.0,
+  );
+
+
   }
 
   @override
