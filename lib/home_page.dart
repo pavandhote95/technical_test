@@ -217,7 +217,7 @@ Fluttertoast.showToast(
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,6 +307,7 @@ Fluttertoast.showToast(
                       if (_isSearching) {
                         _searchController.clear();
                       }
+                      _searchController.clear();
                     });
                   },
                 ),
@@ -317,18 +318,18 @@ Fluttertoast.showToast(
             SizedBox(
               height: 30,
             ),
-            !_isSearching ?   const Text(
+            !_keyboardActive ?   const Text(
               "Hi-Fi Shop & Service",
               style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
             ):SizedBox.shrink(),
-           !_isSearching ?  SizedBox(
+          !_keyboardActive ?  SizedBox(
               height: 15,
             ):SizedBox.shrink(),
-             !_isSearching?  const Text(
+        ! _keyboardActive?  const Text(
               'Audio shop on Rustaveli Ave 57.\nThis shop offers both products and services',
               style: TextStyle(color: Colors.grey),
             ):SizedBox.shrink(),
-          !_isSearching?  SizedBox(
+        !_keyboardActive?  SizedBox(
               height: 30,
             ):SizedBox.shrink(),
           
@@ -384,8 +385,19 @@ Expanded(
 
             
             final itemsToShow = _showAllProducts ? _products : _products.take(2).toList();
+             final searchText = _searchController.text.toLowerCase();
+final filteredProducts = itemsToShow.where((product) {
+  return product['name']!.toLowerCase().contains(searchText);
+}).toList();
 
-            return GridView.builder(
+
+            return filteredProducts.isEmpty
+          ? Center(
+              child: Text(
+                "No products found",
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            ): GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: 10,
@@ -394,15 +406,19 @@ Expanded(
               ),
               itemCount: itemsToShow.length,
               itemBuilder: (context, index) {
-                final searchText = _searchController.text.toLowerCase();
-                final filteredProducts = itemsToShow.where((product) {
-                  return product['name']!.toLowerCase().contains(searchText);
-                }).toList();
+           final searchText = _searchController.text.toLowerCase();
+final filteredProducts = itemsToShow.where((product) {
+  return product['name']!.toLowerCase().contains(searchText);
+}).toList();
 
-                if (filteredProducts.isEmpty) {
-                  return Center(child: Text("No products match your search", style: TextStyle(fontSize: 16, color: Colors.grey)));
-                }
-
+            if (filteredProducts.isEmpty) {
+  return Center(
+    child: Text(
+      "No products found",
+      style: TextStyle(fontSize: 16, color: Colors.grey),
+    ),
+  );
+}
                 
                 if (index >= filteredProducts.length) {
                   return SizedBox();  
@@ -429,9 +445,9 @@ Expanded(
                             Positioned(
                               top: 0.0,
                               right: 0.0,
-                                                             bottom:  _keyboardActive?10:75,
+                                         left: 115,                        bottom:  _keyboardActive?10:68,
                               child: IconButton(
-                                icon: Image.asset('assets/images/delete.png', width:_keyboardActive?15: 25, height: _keyboardActive?15: 25,),
+                                icon: Image.asset('assets/images/delete.png', width:_keyboardActive?15: 35, height: _keyboardActive?15: 35,),
                                 onPressed: () => _deleteProduct(index),
                                 tooltip: 'Delete product',
                               ),
@@ -461,6 +477,9 @@ Expanded(
                 );
               },
             );
+         
+         
+         
           },
         ),
 ),
@@ -514,8 +533,12 @@ Expanded(
 
             
             final itemsToShow = _showAllAccessories ? _accessories : _accessories.take(2).toList();
+              final searchText = _searchController.text.toLowerCase();
+                final filteredAccessories = itemsToShow.where((accessory) {
+                  return accessory['name']!.toLowerCase().contains(searchText);
+                }).toList();
 
-            return GridView.builder(
+return filteredAccessories.isEmpty?   Center(child: Text("No accessories found", style: TextStyle(fontSize: 16, color: Colors.grey))): GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: 10,
@@ -529,9 +552,7 @@ Expanded(
                   return accessory['name']!.toLowerCase().contains(searchText);
                 }).toList();
 
-                if (filteredAccessories.isEmpty) {
-                  return Center(child: Text("No accessories match your search", style: TextStyle(fontSize: 16, color: Colors.grey)));
-                }
+              
                    if (index >= filteredAccessories.length) {
                   return SizedBox();  
                 }
@@ -557,10 +578,11 @@ Expanded(
                             Positioned(
                               top: 0,
                               right: 0.0,
-                              bottom:  _keyboardActive?10:75,
+                            left: 115,                        bottom:  _keyboardActive?10:68,
+                             
                               
                               child: IconButton(
-                                icon: Image.asset('assets/images/delete.png',width:_keyboardActive?15: 25, height: _keyboardActive?15: 25,),
+                                icon: Image.asset('assets/images/delete.png',width: _keyboardActive ? 15: 25, height: _keyboardActive? 15: 25,),
                                 onPressed: () => _deleteAccessory(index),
                                 tooltip: 'Delete accessory',
                               ),
