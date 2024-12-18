@@ -21,21 +21,19 @@ class _LoginPageState extends State<LoginPage> {
   bool _isPasswordVisible = false;
 
   @override
-void dispose() {
-  _emailController.dispose();
-  _passwordController.dispose();
-  _emailFocusNode.dispose();
-  _passwordFocusNode.dispose();
-  super.dispose();
-}
-
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
-   final email = _emailController.text;
+    final email = _emailController.text;
     final password = _passwordController.text;
-
 
     if (email.isEmpty || password.isEmpty) {
       Fluttertoast.showToast(
@@ -86,11 +84,10 @@ void dispose() {
         await prefs.setBool('isLoggedIn', true);
 
         Fluttertoast.showToast(
-        msg: "Login successful!",
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        gravity: ToastGravity.BOTTOM,
-      
+          msg: "Login successful!",
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          gravity: ToastGravity.BOTTOM,
         );
 
         Navigator.pushReplacement(
@@ -98,7 +95,8 @@ void dispose() {
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       } else {
-        final errorMessage = jsonDecode(response.body)['error'] ?? 'Login failed!';
+        final errorMessage =
+            jsonDecode(response.body)['error'] ?? 'Login failed!';
         _showToast(errorMessage);
       }
     } catch (e) {
@@ -107,17 +105,15 @@ void dispose() {
       setState(() => _isLoading = false);
     }
   }
- 
+
   bool _EmailValid(String email) {
     final emailRegExp =
         RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
     return emailRegExp.hasMatch(email);
   }
 
-
   bool _PasswordValid(String password) {
-    return password.length >=
-        6; 
+    return password.length >= 6;
   }
 
   void _showToast(String message) {
@@ -144,16 +140,15 @@ void dispose() {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FadeInDown(
-                   duration: Duration(milliseconds: 1000),
+                  duration: Duration(milliseconds: 1000),
                   child: Image.asset(
                     'assets/images/login.png',
                     height: 290,
                     width: double.infinity,
                   ),
                 ),
-          
                 FadeInDown(
-                     duration: Duration(milliseconds: 1000),
+                  duration: Duration(milliseconds: 1000),
                   child: const Text(
                     "Login",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -161,9 +156,8 @@ void dispose() {
                 ),
                 const SizedBox(height: 10),
                 FadeInDown(
-                   duration: Duration(milliseconds: 1000),
+                  duration: Duration(milliseconds: 1000),
                   child: TextFormField(
-                    
                     controller: _emailController,
                     focusNode: _emailFocusNode,
                     keyboardType: TextInputType.emailAddress,
@@ -185,16 +179,13 @@ void dispose() {
                       contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       border: InputBorder.none,
                     ),
-                                
                     onFieldSubmitted: (_) {
                       _passwordFocusNode.requestFocus();
                     },
                   ),
                 ),
-          
-              
                 FadeInDown(
-                   duration: Duration(milliseconds: 1000),
+                  duration: Duration(milliseconds: 1000),
                   child: Container(
                     margin: const EdgeInsets.only(left: 40),
                     height: 1,
@@ -202,56 +193,55 @@ void dispose() {
                   ),
                 ),
                 const SizedBox(height: 10),
-           FadeInDown(
-             duration: Duration(milliseconds: 1000),
-             child: TextFormField(
-               controller: _passwordController,
-               focusNode: _passwordFocusNode,
-               obscureText: !_isPasswordVisible,
-               decoration: InputDecoration(
-                 prefixIcon: Padding(
-                   padding: const EdgeInsets.only(right: 25.0),
-                   child: Image.asset(
-                     'assets/images/lock.png', 
-                     width: 21,
-                     height: 21,
-                       color: Colors.grey, 
-                   ),
-                 ),
-                 labelText: "Password",
-                 labelStyle: TextStyle(
-                   fontWeight: FontWeight.bold,
-                   color:    Colors.grey,
-                   fontSize: 14,
-                 ),
-                 suffixIcon: IconButton(
-                   icon: Icon(
-                     color: Colors.grey,
-                     _isPasswordVisible
-              ? Icons.visibility
-              : Icons.visibility_off,
-                   ),
-                   onPressed: () {
-                     setState(() {
-                       _isPasswordVisible = !_isPasswordVisible;
-                     });
-                   },
-                 ),
-                 contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                 border: InputBorder.none,
-               ),
-             ),
-           ),
-
                 FadeInDown(
-                   duration: Duration(milliseconds: 1000),
+                  duration: Duration(milliseconds: 1000),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    focusNode: _passwordFocusNode,
+                    obscureText: !_isPasswordVisible,
+                    decoration: InputDecoration(
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(right: 25.0),
+                        child: Image.asset(
+                          'assets/images/lock.png',
+                          width: 21,
+                          height: 21,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      labelText: "Password",
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          color: Colors.grey,
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
+                      contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                FadeInDown(
+                  duration: Duration(milliseconds: 1000),
                   child: Container(
                     margin: const EdgeInsets.only(left: 40),
                     height: 1,
                     color: Colors.grey,
                   ),
                 ),
-                  const SizedBox(height: 10),
+                const SizedBox(height: 10),
                 FadeInDown(
                   child: Align(
                     alignment: Alignment.centerRight,
@@ -260,23 +250,25 @@ void dispose() {
                       child: const Text(
                         "Forgot Password?",
                         style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                           fontSize: 14,),
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 FadeInUp(
-                   duration: Duration(milliseconds: 1000),
+                  duration: Duration(milliseconds: 1000),
                   child: SizedBox(
                     width: double.infinity,
                     height: 44,
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _login,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 27, 101, 250),
+                        backgroundColor:
+                            const Color.fromARGB(255, 27, 101, 250),
                         disabledBackgroundColor: Colors.blue,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -294,7 +286,7 @@ void dispose() {
                           : Text(
                               "Login",
                               style: TextStyle(
-                             fontSize: 14,
+                                  fontSize: 14,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -303,7 +295,7 @@ void dispose() {
                 ),
                 const SizedBox(height: 20),
                 FadeInUp(
-                   duration: Duration(milliseconds: 1000),
+                  duration: Duration(milliseconds: 1000),
                   child: Row(
                     children: [
                       Expanded(child: Divider()),
@@ -316,53 +308,52 @@ void dispose() {
                   ),
                 ),
                 const SizedBox(height: 20),
-              FadeInUp(
-                 duration: Duration(milliseconds: 1000),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color:Color(0xFFF1F6F7),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  width: double.infinity,
-                        height: 44,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 18.0),
-                          child: Image.asset(
-                            'assets/images/Google.png',
-                            height: 20, 
-                            width: 20,
+                FadeInUp(
+                  duration: Duration(milliseconds: 1000),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFFF1F6F7),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    width: double.infinity,
+                    height: 44,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 18.0),
+                            child: Image.asset(
+                              'assets/images/Google.png',
+                              height: 20,
+                              width: 20,
+                            ),
                           ),
-                        ),
-                        const Text(
-                          "Login with Google",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                          const Text(
+                            "Login with Google",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-
-              
                 const SizedBox(height: 20),
                 FadeInUp(
-                   duration: Duration(milliseconds: 1000),
+                  duration: Duration(milliseconds: 1000),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
                         "New to Logistics? ",
                         style: TextStyle(
-                                 fontSize: 14,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(255, 125, 124, 124)),
                       ),
@@ -371,7 +362,7 @@ void dispose() {
                         child: const Text(
                           "Register",
                           style: TextStyle(
-                               fontSize: 14,
+                            fontSize: 14,
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
                           ),

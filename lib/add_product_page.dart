@@ -121,7 +121,7 @@ class _AddProductPageState extends State<AddProductPage> {
         style: const TextStyle(fontSize: 16, color: Colors.white),
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color.fromARGB(255, 27, 101, 250),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -135,6 +135,7 @@ class _AddProductPageState extends State<AddProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
@@ -166,14 +167,7 @@ class _AddProductPageState extends State<AddProductPage> {
           ),
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [const Color.fromARGB(255, 245, 248, 250), Colors.white],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FadeInDown(
           duration: Duration(milliseconds: 1100),
@@ -292,7 +286,8 @@ class _AddProductPageState extends State<AddProductPage> {
                       child: ElevatedButton(
                         onPressed: _submitProduct,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor:
+                              const Color.fromARGB(255, 27, 101, 250),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
