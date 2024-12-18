@@ -159,7 +159,7 @@ Fluttertoast.showToast(
       msg: "Logout",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.blue,
+      backgroundColor: const Color.fromARGB(255, 27, 101, 250),
       textColor: Colors.white,
       fontSize: 16.0,
     );
@@ -644,7 +644,7 @@ floatingActionButton: FloatingActionButton(
     );
   },
   shape: const CircleBorder(),
-  backgroundColor: Colors.blue,
+  backgroundColor:  const Color.fromARGB(255, 27, 101, 250),
 ),
 
     );
